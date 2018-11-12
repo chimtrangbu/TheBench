@@ -16,23 +16,23 @@ def take_args():
     return args
 
 
-# join allfile to run like : ./a ./b (instead of running a, running a & b)
+# join all files to run like : ./a ./b (instead of running a, running a & b)
 def launch_file(src_file):
     file = ' '.join(args.src)
-    run_file = subprocess.run([file], shell=True)
+    subprocess.run(file, shell=True)
 
 
 def option_of_file():
     #  export resource of target file used
     resource_consumed_child = resource.getrusage(resource.RUSAGE_CHILDREN)
     if args.memory:
-        # export memory
+        #  export memory
         memory_child = resource_consumed_child.ru_maxrss
-        # print('Memory usage: ' + str(memory_child) + ' KB' )
-        print('Memory usage: %0.0f' % memory_child + ' KB')
+        #  print('Memory usage: ' + str(memory_child) + ' KB' )
+        print('Memory usage: %0.0f KB' % memory_child)
     if args.numfunc:
-        src = args.src[0]
-        compile_target_file = compile(open(src, "rb").read(), src, 'exec')
+        pro = args.src[0]
+        compile_target_file = compile(open(pro, "rb").read(), pro, 'exec')
         pr = cProfile.Profile()
         pr.enable()
         pr.run(compile_target_file)
@@ -41,7 +41,8 @@ def option_of_file():
         ps = pstats.Stats(pr).sort_stats('calls')
         # src[2:] if my program = ./smart_db.py , it'll get smart_db.py
         # find in field "filename:lineno(function)" to get func of smart_db.py
-        ps.print_stats(src[2:])
+        # ps.print_stats(pro[2:])
+        ps.print_stats()
     else:
         # export time of user
         # export time of system
@@ -49,7 +50,7 @@ def option_of_file():
         run_time_child = resource_consumed_child.ru_utime
         run_sys_time = resource_consumed_child.ru_stime
         total_time = run_time_child + run_sys_time
-        print('run-time:', run_time_child)
+        print('run-time: %s s' %total_time)
 
 
 if __name__ == '__main__':
